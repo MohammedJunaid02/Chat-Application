@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useChatStore } from "../store/useChatStore"
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
@@ -7,13 +7,24 @@ import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
 
 const ChatContainer = () => {
-    const { messages , getMessages , isMessagesLoading , selectedUser } = useChatStore();
-
+    const { messages , getMessages , isMessagesLoading , selectedUser , subscribeToMessages , unsubscribeFromMessages } = useChatStore();
     const { authUser } = useAuthStore();
+    const messageEndRef = useRef(null);
 
     useEffect(()=> {
-        getMessages(selectedUser._id)
-    },[getMessages,selectedUser._id])
+        getMessages(selectedUser._id);
+        subscribeToMessages();
+
+        return () => unsubscribeFromMessages();
+    },[getMessages,selectedUser._id,subscribeToMessages,unsubscribeFromMessages]);
+
+    useEffect (() => {
+        if(messageEndRef.current && messages)
+        {
+            messageEndRef.current.scrollIntoView({ behavior: "smooth" , block: "end",});
+        }
+    },[messages])
+
     if (isMessagesLoading)  {
         return (
             <div className="flex flex-1 flex-col overflow-auto">
@@ -32,7 +43,8 @@ const ChatContainer = () => {
             {messages.map((message) => (
                 <div
                     key={message._id}
-                    className={`chat ${message.senderId === authUser._id ? "chat-end " : "chat-start "} `}
+                    className={`chat ${message.senderId === authUser._id ? "chat-end " : "chat-start "}`}
+                    ref={messageEndRef}
                 >
                     <div className="chat-image avatar">
                         <div className="size-10 rounded-full border">
@@ -54,7 +66,7 @@ const ChatContainer = () => {
                                 
                             />
                         )}
-                        {message.text && <p>{message.text}</p>}
+                        {message.text && <p className="overflow-x-auto">{message.text}</p>}
                     </div>
                 </div>
             ))}

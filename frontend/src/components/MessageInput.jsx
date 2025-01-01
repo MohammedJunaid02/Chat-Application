@@ -34,25 +34,12 @@ const MessageInput = () => {
     const handleSendMessage = async (e) => 
     {
         e.preventDefault();
-        console.log("Text:", text);
-        console.log("Image Preview:", imagePreview);
-        console.log("Message sent successfully!");
-
-        console.log("e->",e);
-        console.log("e1->",e.target);
-        console.log("e1->",e.target.value);
-
 
         //if you want to check what data/values is being passed to the backend
-
         const formData = new FormData(e.target);
         const textValue = formData.get('text'); // Replace 'text' with your input's `name` attribute.
-        console.log(formData);
-        console.log("textValue: " + textValue);
         
-
         if(!text.trim() && !imagePreview) return;
-
         try
         {
             console.log("text: " + text);
