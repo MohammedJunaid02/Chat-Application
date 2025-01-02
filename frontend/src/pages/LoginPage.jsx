@@ -20,9 +20,9 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="h-screen grid lg:grid-cols-2">
+    <div className="h-full grid lg:grid-cols-2 mt-10">
       {/* Left Side Form */}
-      <div className="flex flex-col justify-center items-center p-6 sm:p-12">
+      <div className="flex flex-col justify-center items-center p-2 sm:p-12">
         <div className="w-full max-w-md space-y-8">
           {/* Logo */}
           <div className="text-center mb-8">
@@ -93,7 +93,21 @@ const LoginPage = () => {
               )}
             </button>
           </form>
-
+          <div className="divider">Or sign in with</div>
+          <div className="flex gap-12 justify-center items-center ">
+            <button onClick={() => window.location.href="/auth/google"}>
+              <img src={"/google.png"} alt="Google icon" className="size-16"/>
+            </button>
+            <button onClick={() => window.location.href="/auth/facebook"}>
+              <img src={"/facebook.png"} alt="Google icon" className="size-16"/>
+            </button>
+            <button onClick={() => window.location.href="/auth/twitter"}>
+              <img src={"/twitter.png"} alt="Google icon" className="size-16"/>
+            </button>
+            <button onClick={() => window.location.href="/auth/github"}>
+              <img src={"/github.png"} alt="Google icon" className="size-16"/>
+            </button>
+          </div>
           <div className="text-center">
             <p className="text-base-content/60">
               Don&apos;t have an account?{" "}
