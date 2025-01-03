@@ -95,9 +95,12 @@ const LoginPage = () => {
           </form>
           <div className="divider">Or sign in with</div>
           <div className="flex gap-12 justify-center items-center ">
-            <button onClick={() => window.location.href="/auth/google"}>
-              <img src={"/google.png"} alt="Google icon" className="size-16"/>
-            </button>
+            {/* <button onClick={() => window.location.href=`http://localhost:5001/api/auth/google`}> */}
+            <form action="http://localhost:5001/api/auth/google">
+              <button>
+                <img src={"/google.png"} alt="Google icon" className="size-16"/>
+              </button>
+            </form>
             <button onClick={() => window.location.href="/auth/facebook"}>
               <img src={"/facebook.png"} alt="Google icon" className="size-16"/>
             </button>

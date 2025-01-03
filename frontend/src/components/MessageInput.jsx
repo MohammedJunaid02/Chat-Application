@@ -36,8 +36,8 @@ const MessageInput = () => {
         e.preventDefault();
 
         //if you want to check what data/values is being passed to the backend
-        const formData = new FormData(e.target);
-        const textValue = formData.get('text'); // Replace 'text' with your input's `name` attribute.
+        // const formData = new FormData(e.target);
+        // const textValue = formData.get('text'); // Replace 'text' with your input's `name` attribute.
         
         if(!text.trim() && !imagePreview) return;
         try

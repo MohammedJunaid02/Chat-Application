@@ -1,23 +1,31 @@
+// index.js
 import express from "express";
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
+import passport from "passport"; 
 import { connectDB } from "./lib/db.js";
 import { app, server } from "./lib/socket.js";
-
 import path from "path";
+import session from "express-session"; 
+import "./lib/oauth.js";
 
 dotenv.config();
 
-const PORT = process.env.PORT;
-
-const __dirname = path.resolve();
+app.use(session({
+    resave: false,
+    saveUninitialized: true,
+    secret: process.env.SESSION_SECRET,
+    cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // Set `secure` to true in production for HTTPS
+    }
+}));
 
 app.use(express.json({
-    limit: "10mb",  //added this to override the deafult 100kb limit as here uploading images is required
+    limit: "10mb",  // Increased limit for image uploads
 }));
 
 app.use(cors({
@@ -26,12 +34,15 @@ app.use(cors({
 }));
 
 app.use(cookieParser());
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.use("/api/auth",authRoutes);
-app.use("/api/messages",messageRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/messages", messageRoutes);
 
-if(process.env.NODE_ENV === "production")
-{
+// Serve static assets for production
+if (process.env.NODE_ENV === "production") {
+    const __dirname = path.resolve();
     app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
     app.get("*", (req, res) => {
@@ -39,7 +50,8 @@ if(process.env.NODE_ENV === "production")
     });
 }
 
+const PORT = process.env.PORT;
 server.listen(PORT, () => {
-    console.log("Server is running on port " + PORT);
+    console.log(`Server is running on port ${PORT}`);
     connectDB();
-})
+});
